@@ -99,7 +99,7 @@
    "source": [
     "The network has four hubs (most occupied bins). Now we put axes and identify the hubs from 1 to 4, where 1 is the most occupied hub:\n",
     "\n",
-    "![](/3.2-wocmap/PUMA_network.png)"
+    "![](PUMA_network.png)"
    ]
   },
   {
@@ -189,7 +189,7 @@
    "source": [
     "In order to investigate the link between the hubs and possible conformations, typical conformations corresponding to the low energy tail (LET) and median energy region (MER) were analysed. As the energy distribution of the hubs have overlapping regions, similar conformations are found for different hubs, as shown below for the LET region:\n",
     "\n",
-    "![](/3.2-wocmap/PUMA_energy_confs.png)"
+    "![](PUMA_energy_confs.png)"
    ]
   },
   {
@@ -199,7 +199,7 @@
     "Below, there are two movies corresponding to LET (left) and MER (right) conformations of hub 1, showing formed contacts. The criteria to build the contact map during the simulations was i,i+3. However, in the movies, only contacts that obbey the criteria i,i+5 are shown.\n",
     "\n",
     "\n",
-    "![alt text](/3.2-wocmap/hub1_e-75p7_traj34_ts298_resize.gif) ![alt text](/3.2-wocmap/hub1_e-56p329_traj17_ts72_resize.gif)"
+    "![alt text](hub1_e-75p7_traj34_ts298_resize.gif) ![alt text](hub1_e-56p329_traj17_ts72_resize.gif)"
    ]
   },
   {
