@@ -196,11 +196,8 @@ class RgL(object):
             
         i = 0
         
-        if compute_energy:
-            self.Elist = [[] for y in range(self.nselHubs)]
-        
-        if compute_contacts:
-            self.nclist = [[] for y in range(self.nselHubs)]
+        if compute_energy or compute_contacts:
+            self.ConfHubList = [[] for y in range(self.nselHubs)]
         
         with open(self.fin) as fp:
             for j, line in enumerate(fp):            
@@ -277,7 +274,7 @@ class RgL(object):
                     compute = True
                     
                     if compute_occupancy or compute_transitions:
-                        xinds, bins_x, xnbinspri = digitize_vec(x, self.len_xbin, self.xmin, self.xmax)
+                        xinds, bins_x, xnbins = digitize_vec(x, self.len_xbin, self.xmin, self.xmax)
                         yinds, bins_y, ynbins = digitize_vec(y, self.len_ybin, self.ymin, self.ymax)
                         inds = list(zip(xinds,yinds))                    
                         bins = list(bins_x) + list(bins_y)                            
@@ -288,14 +285,18 @@ class RgL(object):
                                 print('Error: Some of the selected hubs were not reached. Skipping trajectory.')
                                 compute=False
                                 
-                    if compute_energy:
+                    if compute_energy and not compute_contacts:
                         for k1,x1 in enumerate(self.selHubs):
-                           self.Elist[k1].extend([(itraj, k2, Etraj[k2]) for k2,x2 in enumerate(inds) if x2 == x1])
+                           self.ConfHubList[k1].extend([(itraj, self.dt*k2, x[k2], y[k2], inds[k2], Etraj[k2]*1.5) for k2,x2 in enumerate(inds) if x2 == x1]) #1.5 for kcal/mol units
                     
-                    if compute_contacts:
+                    elif compute_contacts and not compute_energy:
                         for k1,x1 in enumerate(self.selHubs):
-                           self.nclist[k1].extend([(itraj, k2, nc[k2]) for k2,x2 in enumerate(inds) if x2 == x1])
-                            
+                           self.ConfHubList[k1].extend([(itraj, self.dt*k2, x[k2], y[k2], inds[k2], nc[k2]) for k2,x2 in enumerate(inds) if x2 == x1])
+                           
+                    elif compute_energy and compute_contacts:      
+                        for k1,x1 in enumerate(self.selHubs):
+                           self.ConfHubList[k1].extend([(itraj, self.dt*k2, x[k2], y[k2], inds[k2], nc[k2], Etraj[k2]*1.5) for k2,x2 in enumerate(inds) if x2 == x1])  #1.5 for kcal/mol units
+                           
                     if criterion:          
                         if compute:
                             if criterion == 'hub_data':
@@ -411,12 +412,14 @@ class RgL(object):
                         if ittraj < len(traj):
                             itraj = traj[ittraj]
                         else:
+                            ntraj = ittraj
                             break
                         
                     else:
                         itraj+=1
+                        ntraj = itraj
         
-        self.ntraj = itraj
+        self.ntraj = ntraj
         
         if criterion == 'hub_data':
             self.t_hubs, self.frac_traj_hubs, self.frac_traj_fh =\
